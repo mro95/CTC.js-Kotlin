@@ -120,7 +120,10 @@
         dot2_sx680k$: function (a, b) {
           return a.x * b.x + a.y * b.y;
         }
-      })
+      }),
+      object_initializer$: function () {
+        _.Vec2.Companion;
+      }
     }),
     StageCircle: Kotlin.createClass(null, function (p, r) {
       this.p = p;
@@ -169,14 +172,19 @@
       start: function () {
         this.currentTime = (new Date()).getTime();
         this.stageCircle.r = 400.0;
-        this.situation1();
+        this.createBalls_za3lpa$(5);
         this.loop();
       },
       loop: function () {
+        var tmp$0, tmp$1, tmp$2, tmp$3;
         this.lastTime = this.currentTime;
         this.currentTime = (new Date()).getTime();
         var dt = (this.currentTime - this.lastTime) / 1000;
-        this.update_14dthe$(dt);
+        var dt2 = dt / 20;
+        tmp$0 = new Kotlin.NumberRange(0, 20), tmp$1 = tmp$0.first, tmp$2 = tmp$0.last, tmp$3 = tmp$0.step;
+        for (var i = tmp$1; i <= tmp$2; i += tmp$3) {
+          this.update_14dthe$(dt2);
+        }
         this.render();
         if (this.running) {
           window.requestAnimationFrame(_.Mainloop.loop$f(this));
@@ -228,6 +236,43 @@
         this.balls[1] = new _.Ball(new _.Vec2(-150.0, 0.0), 20.0);
         this.balls[1].v = new _.Vec2(150.0, 0.0);
         (tmp$1 = this.balls[1].circle) != null ? (tmp$1.color = new _.Color(0, 0, 255, 255)) : null;
+      },
+      createBalls_za3lpa$: function (amount) {
+        var tmp$0, tmp$1, tmp$2, tmp$3, tmp$4, tmp$5, tmp$6, tmp$7;
+        tmp$0 = new Kotlin.NumberRange(0, amount), tmp$1 = tmp$0.first, tmp$2 = tmp$0.last, tmp$3 = tmp$0.step;
+        for (var i = tmp$1; i <= tmp$2; i += tmp$3) {
+          var isUnique = false;
+          var counter = 0;
+          while (!isUnique) {
+            if (counter > 1000) {
+              isUnique = true;
+              window.alert('FUCK!');
+            }
+            counter++;
+            var mass = this.randNr_lu1900$(50.0, 200.0);
+            var b1 = new _.Ball(new _.Vec2(this.randNr_lu1900$(-200.0, 200.0), this.randNr_lu1900$(-200.0, 200.0)), mass / 5);
+            b1.v = new _.Vec2(this.randNr_lu1900$(-200.0, 200.0), this.randNr_lu1900$(-200.0, 200.0));
+            (tmp$4 = b1.circle) != null ? (tmp$4.color = new _.Color(this.randNr_vux9f0$(0, 255), this.randNr_vux9f0$(0, 255), this.randNr_vux9f0$(0, 255), 255)) : null;
+            var tmpUnique = true;
+            tmp$5 = this.balls, tmp$6 = tmp$5.length;
+            for (var tmp$7 = 0; tmp$7 !== tmp$6; ++tmp$7) {
+              var b2 = tmp$5[tmp$7];
+              if (b1.ballCollision_187q7$(b2)) {
+                tmpUnique = false;
+              }
+            }
+            if (tmpUnique) {
+              this.balls[this.balls.length] = b1;
+              isUnique = true;
+            }
+          }
+        }
+      },
+      randNr_vux9f0$: function (min, max) {
+        return Math.random() * (max - min) + min | 0;
+      },
+      randNr_lu1900$: function (min, max) {
+        return Math.random() * (max - min) + min;
       }
     }, /** @lends _.Mainloop */ {
       loop$f: function (this$Mainloop) {

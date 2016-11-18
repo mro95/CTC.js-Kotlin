@@ -32,6 +32,7 @@ class Mainloop() {
         currentTime = Date().getTime().toDouble()
         stageCircle.r = 400.0
         createBalls(5)
+        //situation1()
         loop()
     }
 
@@ -39,7 +40,7 @@ class Mainloop() {
         lastTime = currentTime;
         currentTime = Date().getTime().toDouble()
         val dt = (currentTime - lastTime) / 1000
-        val dt2 = dt/20
+        val dt2 = dt / 20
         for (i in (0..20)) {
             update(dt2)
         }
@@ -72,7 +73,7 @@ class Mainloop() {
     fun render() {
         clearStage()
         stageCircle.circle.draw(ctx!!, canvas!!)
-        for(ball in balls) {
+        for (ball in balls) {
             ball.circle!!.draw(ctx!!, canvas!!)
         }
     }
@@ -94,12 +95,31 @@ class Mainloop() {
     }
 
     fun createBalls(amount: Int) {
-        for(i in (0..amount)) {
+        for (i in (0..amount)) {
             var isUnique = false
+            var counter = 0
             while (!isUnique) {
-                var mass = randNr(50.0, 200.0)
-                var b = Ball(Vec2(randNr(-200.0,200.0),randNr(-200.0,200.0)), mass/5)
+                if (counter > 1000) {
+                    isUnique = true
+                    window.alert("FUCK!")
+                }
+                counter++
 
+                var mass = randNr(50.0, 200.0)
+                val b1 = Ball(Vec2(randNr(-200.0, 200.0), randNr(-200.0, 200.0)), mass / 5)
+                b1.v = Vec2(randNr(-200.0, 200.0), randNr(-200.0, 200.0))
+                b1.circle?.color = Color(randNr(0, 255), randNr(0, 255), randNr(0, 255), 255)
+
+                var tmpUnique = true
+                for (b2 in balls) {
+                    if (b1.ballCollision(b2)) {
+                        tmpUnique = false
+                    }
+                }
+                if (tmpUnique) {
+                    balls[balls.size] = b1
+                    isUnique = true
+                }
             }
         }
     }
